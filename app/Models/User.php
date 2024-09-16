@@ -2,14 +2,19 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Traits\HasFileAttribute;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use Laravel\Scout\Searchable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, HasFileAttribute, Notifiable;
+//        Searchable;
 
     /**
      * The attributes that are mass assignable.
@@ -20,6 +25,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'avatar',
     ];
 
     /**
@@ -30,18 +36,61 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'two_factor_secret',
+        'two_factor_recovery_codes',
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'two_factor_secret' => 'encrypted',
+        'two_factor_recovery_codes' => 'encrypted',
+    ];
+
+    /**
+     * Append the disk URL to the avatar url when accessed.
+     */
+    protected function avatar(): Attribute
+    {
+        return $this->fileAttribute();
+    }
+
+    /**
+     * Deletes the user's avatar from storage.
+     */
+    public function deleteAvatar(): bool
+    {
+        return $this->deleteFile('avatar');
+    }
+
+    /**
+     * Deletes the user and their associated avatar from storage.
+     */
+    public function delete(): bool
+    {
+        $this->deleteAvatar();
+
+        return parent::delete();
+    }
+
+    /**
+     * @todo setup scout & meilisearch
+     * Get the indexable data array for the model.
      *
      * @return array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+//    public function toSearchableArray(): array
+//    {
+//        $array = $this->toArray();
+//
+//        return [
+//            'name' => $array['name'],
+//            'email' => $array['email'],
+//        ];
+//    }
 }
