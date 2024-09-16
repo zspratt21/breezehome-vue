@@ -3,11 +3,28 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "vite build"
+        "build": "vue-tsc && vite build",
+        "build-no-check": "vite build",
+        "stop-vite-container": "docker-compose down vite && rm ./public/hot -f && npm run build",
+        "docker-db-import": "docker-compose exec db sh -c 'mysql -u root -p\"$MYSQL_ROOT_PASSWORD\" \"$MYSQL_DATABASE\" < /dumps/dump.sql'",
+        "docker-db-dump": "docker-compose exec db sh -c 'mysqldump -u root -p\"$MYSQL_ROOT_PASSWORD\" \"$MYSQL_DATABASE\" > /dumps/dump.sql'",
+        "docker-tinker": "docker-compose exec web php artisan tinker",
+        "docker-config-clear": "docker-compose exec web php artisan config:clear",
+        "docker-artisan-test": "docker-compose exec cli php artisan test",
+        "pint": "./vendor/bin/pint"
     },
     "devDependencies": {
+        "@inertiajs/vue3": "^1.0.0",
+        "@tailwindcss/forms": "^0.5.3",
+        "@vitejs/plugin-vue": "^5.0.0",
+        "autoprefixer": "^10.4.12",
         "axios": "^1.7.4",
         "laravel-vite-plugin": "^1.0",
-        "vite": "^5.0"
+        "postcss": "^8.4.31",
+        "tailwindcss": "^3.2.1",
+        "typescript": "^5.5.3",
+        "vite": "^5.0",
+        "vue": "^3.4.0",
+        "vue-tsc": "^2.0.24"
     }
 }
