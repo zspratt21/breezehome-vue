@@ -39,7 +39,7 @@ import DropdownLink from "@/Components/DropdownLink.vue";
                     </template>
                     <template #content>
                         <DropdownLink :href="route('profile.edit')">&#xf007; &nbsp; Profile</DropdownLink>
-                        <DropdownLink v-if="$page.props.auth.user.id == 2" :href="route('php-info')" target="_blank">&#xf233; &nbsp; PHP Info</DropdownLink>
+                        <DropdownLink v-if="$page.props.auth.user.id == 1" :href="route('php-info')" target="_blank">&#xf233; &nbsp; PHP Info</DropdownLink>
                         <DropdownLink :href="route('logout')" method="post" as="button">&#xf2f5; &nbsp; Log Out</DropdownLink>
                     </template>
                 </Dropdown>
