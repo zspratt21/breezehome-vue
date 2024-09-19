@@ -1,20 +1,21 @@
 <script setup lang="ts">
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import { Link } from '@inertiajs/vue3';
+import NavLink from '@/Components/NavLink.vue';
+import MainLayout from './MainLayout.vue';
 </script>
 
 <template>
-    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
-        <div>
-            <Link href="/">
-                <ApplicationLogo class="w-20 h-20 fill-current text-gray-500" />
-            </Link>
-        </div>
-
-        <div
-            class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg"
-        >
-            <slot />
-        </div>
-    </div>
+    <MainLayout>
+        <template v-if="$slots.header" #header>
+            <slot name="header"></slot>
+        </template>
+        <template #navigationLinks>
+            <NavLink :href="route('login')" :active="route().current('login')">
+                Login
+            </NavLink>
+            <NavLink :href="route('register')" :active="route().current('register')">
+                Register
+            </NavLink>
+        </template>
+        <slot></slot>
+    </MainLayout>
 </template>
