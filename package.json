@@ -8,10 +8,12 @@
         "stop-vite-container": "docker-compose down vite && rm ./public/hot -f && npm run build",
         "docker-db-import": "docker-compose exec db sh -c 'mysql -u root -p\"$MYSQL_ROOT_PASSWORD\" \"$MYSQL_DATABASE\" < /dumps/dump.sql'",
         "docker-db-dump": "docker-compose exec db sh -c 'mysqldump -u root -p\"$MYSQL_ROOT_PASSWORD\" \"$MYSQL_DATABASE\" > /dumps/dump.sql'",
+        "docker-web-migrate": "docker-compose exec web php artisan migrate",
+        "docker-web-config-clear": "docker-compose exec web php artisan config:clear",
+        "docker-web-config-cache": "docker-compose exec web php artisan config:cache",
         "docker-tinker": "docker-compose exec web php artisan tinker",
-        "docker-config-clear": "docker-compose exec web php artisan config:clear",
-        "docker-artisan-test": "docker-compose exec cli php artisan test",
-        "pint": "./vendor/bin/pint"
+        "pint": "./vendor/bin/pint",
+        "test": "docker-compose exec cli php artisan test"
     },
     "devDependencies": {
         "@inertiajs/vue3": "^1.0.0",

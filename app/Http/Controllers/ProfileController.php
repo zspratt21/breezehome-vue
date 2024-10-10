@@ -29,12 +29,20 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
+        clock($request->validated());
+        clock($request->file_avatar);
+        clock($request->remove_avatar);
         $request->user()->fill($request->validated());
-
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
         }
-
+        if ((int) $request->remove_avatar == 1) {
+            $request->user()->deleteAvatar();
+            $request->user()->avatar = null;
+        } elseif ($request->hasFile('file_avatar')) {
+            $request->user()->deleteAvatar();
+            $request->user()->avatar = $request->file('file_avatar')->storePubliclyAs('users/'.Auth::user()->id.'/avatar', date('U').'.'.$request->file('file_avatar')->clientExtension());
+        }
         $request->user()->save();
 
         return Redirect::route('profile.edit');

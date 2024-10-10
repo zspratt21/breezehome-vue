@@ -9,9 +9,9 @@ use chillerlan\QRCode\Common\Version;
 use chillerlan\QRCode\Data\QRMatrix;
 use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Redis;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -116,7 +116,7 @@ class TwoFactorController extends Controller
     /**
      * Enable two-factor authentication on the user's account.
      */
-    public function enableCheck(): JsonResponse
+    public function enableCheck(): RedirectResponse
     {
         $user = Auth::user();
         $code = request()->input('code');
@@ -126,19 +126,21 @@ class TwoFactorController extends Controller
         ];
         if ($valid) {
             $recovery_codes = generateTwoFactorRecoveryCodes(5);
-            $data['recovery_codes'] = $recovery_codes;
+            $data['recoveryCodes'] = $recovery_codes;
             $user->two_factor_recovery_codes = json_encode($recovery_codes);
             $user->two_factor_enabled = 1;
             $user->save();
+            return Redirect::route('profile.edit')->with('flash_data', $data);
         }
 
-        return response()->json($data);
+        return Redirect::route('profile.edit')
+            ->withErrors(['code' => 'Invalid code']);
     }
 
     /**
      * Generate and display a QR code for setting up two-factor authentication.
      */
-    public function enable(): JsonResponse
+    public function enable(): RedirectResponse
     {
         $user = Auth::user();
         $google2fa = new Google2FA();
@@ -166,15 +168,13 @@ class TwoFactorController extends Controller
         $qrcode = new QRCode($options);
         $qrcode_png_data = $qrcode->render($otp_auth_url);
 
-        return response()->json([
-            'qr_png' => $qrcode_png_data,
-        ]);
+        return Redirect::route('profile.edit')->with('flash_data', ['qrCode' => $qrcode_png_data]);
     }
 
     /**
      * Disable two-factor authentication on the user's account.
      */
-    public function disable(): JsonResponse
+    public function disable(): RedirectResponse
     {
         $user = Auth::user();
         $code = request()->input('code');
@@ -183,14 +183,11 @@ class TwoFactorController extends Controller
             $user->two_factor_enabled = 0;
             $user->two_factor_secret = null;
             $user->two_factor_recovery_codes = null;
+            $user->save();
 
-            return response()->json([
-                'disabled_2fa' => (int) $user->save(),
-            ]);
+            return Redirect::route('profile.edit');
         }
 
-        return response()->json([
-            'disabled_2fa' => 0,
-        ]);
+        return Redirect::route('profile.edit')->withErrors(['code' => 'Invalid code']);
     }
 }

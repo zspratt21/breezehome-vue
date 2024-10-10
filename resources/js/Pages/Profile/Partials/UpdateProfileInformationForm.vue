@@ -4,6 +4,8 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
+import ImageInput from "@/Components/ImageInput.vue";
+import {computed} from "vue";
 
 defineProps<{
     mustVerifyEmail?: Boolean;
@@ -11,11 +13,22 @@ defineProps<{
 }>();
 
 const user = usePage().props.auth.user;
+const avatar = computed(() => usePage().props.auth.user.avatar);
 
 const form = useForm({
     name: user.name,
     email: user.email,
+    file_avatar: null as File | null,
+    remove_avatar: 0 as 1 | 0,
+    _method: 'patch',
 });
+
+const submitForm = () => {
+    form.post(route('profile.update'), {
+        preserveScroll: true,
+    });
+};
+
 </script>
 
 <template>
@@ -28,7 +41,7 @@ const form = useForm({
             </p>
         </header>
 
-        <form @submit.prevent="form.patch(route('profile.update'))" class="mt-6 space-y-6">
+        <form @submit.prevent="submitForm" class="mt-6 space-y-6">
             <div>
                 <InputLabel for="name" value="Name" />
 
@@ -79,6 +92,24 @@ const form = useForm({
                 >
                     A new verification link has been sent to your email address.
                 </div>
+            </div>
+
+            <div>
+                <InputLabel for="file_avatar" value="Profile Photo" />
+
+                <ImageInput
+                    id="file_avatar"
+                    ref="imageInputRef"
+                    class="mt-1 block w-full"
+                    :initialPhoto="avatar ?? null"
+                    v-model:current_file="form.file_avatar"
+                    v-model:removed="form.remove_avatar"
+                    previewAlt="Profile Photo"
+                    previewClassName="min-h-36 h-66 w-auto"
+                    :recentlySuccessful="form.recentlySuccessful"
+                />
+
+                <InputError class="mt-2" :message="form.errors.file_avatar" />
             </div>
 
             <div class="flex items-center gap-4">

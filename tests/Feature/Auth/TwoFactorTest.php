@@ -83,11 +83,9 @@ test('2fa check redirects to log in if there is no session token', function () {
 
 test('enable callback provides valid qr code and secret', function () {
     $response = $this->actingAs($this->user)->post(route('2fa.enable'));
-    $response->assertStatus(200);
-    $response->assertJsonStructure([
-        'qr_png' => [],
-    ]);
-    $qr_png_data = $response->json('qr_png');
+    $response->assertStatus(302);
+    $response->assertSessionHas('flash_data.qrCode');
+    $qr_png_data = $response->getSession()->get('flash_data.qrCode');
     $qr_image = base64_decode(str_replace('data:image/png;base64,', '', $qr_png_data));
     $qr_code = (new QRCode())->readFromBlob($qr_image);
     $url_components = parse_url((string) $qr_code);
@@ -112,10 +110,8 @@ test('users can enable 2fa', function () {
     $response = $this->actingas($this->user)->post(route('2fa.enable.check'), [
         'code' => $otp,
     ]);
-    $response->assertStatus(200);
-    $response->assertJsonStructure([
-        'recovery_codes' => [],
-    ]);
+    $response->assertStatus(302);
+    $response->assertSessionHas('flash_data.recoveryCodes');
     $this->user->refresh();
     expect($this->user->two_factor_enabled)->toBe(1);
 });
@@ -125,10 +121,9 @@ test('users cannot enable 2fa with invalid otp', function () {
     $response = $this->actingas($this->user)->post(route('2fa.enable.check'), [
         'code' => '123456',
     ]);
-    $response->assertStatus(200);
-    $response->assertJsonFragment([
-        'valid' => 0,
-    ]);
+    $response->assertStatus(302);
+    $response->assertSessionHasErrors('code');
+
     $this->user->refresh();
     expect($this->user->two_factor_enabled)->toBe(0);
 });
@@ -140,10 +135,7 @@ test('users can disable 2fa', function () {
     $response = $this->actingas($this->user)->post(route('2fa.disable'), [
         'code' => $otp,
     ]);
-    $response->assertStatus(200);
-    $response->assertJsonFragment([
-        'disabled_2fa' => 1,
-    ]);
+    $response->assertStatus(302);
     $this->user->refresh();
     expect($this->user->two_factor_enabled)->toBe(0);
 });
@@ -153,10 +145,8 @@ test('users cannot disable 2fa with invalid otp', function () {
     $response = $this->actingas($this->user)->post(route('2fa.disable'), [
         'code' => '123456',
     ]);
-    $response->assertStatus(200);
-    $response->assertJsonFragment([
-        'disabled_2fa' => 0,
-    ]);
+    $response->assertStatus(302);
+    $response->assertSessionHasErrors('code');
     $this->user->refresh();
     expect($this->user->two_factor_enabled)->toBe(1);
 });

@@ -12,6 +12,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/scout": "^10.11",
         "laravel/tinker": "^2.9",
+        "league/flysystem-aws-s3-v3": "^3.29",
         "meilisearch/meilisearch-php": "^1.10",
         "pragmarx/google2fa": "^8.0",
         "sentry/sentry-laravel": "^4.8",
