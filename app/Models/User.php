@@ -13,8 +13,7 @@ use Laravel\Scout\Searchable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, HasFileAttribute, Notifiable;
-//        Searchable;
+    use HasApiTokens, HasFactory, HasFileAttribute, Notifiable, Searchable;
 
     /**
      * The attributes that are mass assignable.
@@ -79,18 +78,15 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * @todo setup scout & meilisearch
      * Get the indexable data array for the model.
-     *
-     * @return array<string, string>
      */
-//    public function toSearchableArray(): array
-//    {
-//        $array = $this->toArray();
-//
-//        return [
-//            'name' => $array['name'],
-//            'email' => $array['email'],
-//        ];
-//    }
+    public static function toSearchable(User $user): array
+    {
+        $array = $user->toArray();
+
+        return [
+            'name' => $array['name'],
+            'email' => $array['email'],
+        ];
+    }
 }
