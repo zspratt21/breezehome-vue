@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, watch } from 'vue';
-import {Head, useForm} from '@inertiajs/vue3';
+import {useForm} from '@inertiajs/vue3';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import TextInput from '@/Components/TextInput.vue';
 import FullPageForm from '@/Components/FullPageForm.vue';

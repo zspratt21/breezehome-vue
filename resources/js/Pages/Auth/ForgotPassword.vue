@@ -45,6 +45,7 @@ const submit = () => {
                         required
                         autofocus
                         autocomplete="username"
+                        placeholder="&#xf0e0;"
                     />
 
                     <InputError class="mt-2" :message="form.errors.email" />
@@ -52,7 +53,7 @@ const submit = () => {
 
                 <div class="flex items-center justify-end mt-4">
                     <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                        Email Password Reset Link
+                        &#xf1d8; Send Password Reset Link
                     </PrimaryButton>
                 </div>
             </form>

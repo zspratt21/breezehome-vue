@@ -49,6 +49,7 @@ const submit = () => {
                         required
                         autofocus
                         autocomplete="username"
+                        placeholder="&#xf0e0;"
                     />
 
                     <InputError class="mt-2" :message="form.errors.email" />
@@ -64,6 +65,7 @@ const submit = () => {
                         v-model="form.password"
                         required
                         autocomplete="current-password"
+                        placeholder="&#xf084;"
                     />
 
                     <InputError class="mt-2" :message="form.errors.password" />
@@ -86,7 +88,7 @@ const submit = () => {
                     </Link>
 
                     <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                        Log in
+                        &#xf2f6; Log in
                     </PrimaryButton>
                 </div>
             </form>

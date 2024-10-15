@@ -7,7 +7,7 @@ use PragmaRX\Google2FA\Google2FA;
 
 function setup2fa(): void
 {
-    $google2fa = new Google2FA();
+    $google2fa = new Google2FA;
     test()->user->two_factor_secret = $google2fa->generateSecretKey();
     test()->user->save();
 }
@@ -37,7 +37,7 @@ test('2fa check page can be rendered', function () {
 test('users can log in with correct otp', function () {
     Redis::shouldReceive('get')->andReturn($this->user->email);
     enable2fa();
-    $google2fa = new Google2FA();
+    $google2fa = new Google2FA;
     $response = $this->post(route('2fa.check'), [
         'code' => $google2fa->getCurrentOtp($this->user->two_factor_secret),
     ]);
@@ -87,7 +87,7 @@ test('enable callback provides valid qr code and secret', function () {
     $response->assertSessionHas('flash_data.qrCode');
     $qr_png_data = $response->getSession()->get('flash_data.qrCode');
     $qr_image = base64_decode(str_replace('data:image/png;base64,', '', $qr_png_data));
-    $qr_code = (new QRCode())->readFromBlob($qr_image);
+    $qr_code = (new QRCode)->readFromBlob($qr_image);
     $url_components = parse_url((string) $qr_code);
     $query_string = $url_components['query'] ?? '';
     parse_str($query_string, $params);
@@ -98,14 +98,14 @@ test('enable callback provides valid qr code and secret', function () {
     $secret = $params['secret'] ?? null;
     expect($secret)->not->toBeNull()
         ->and($secret)->toBe($this->user->two_factor_secret);
-    $google2fa = new Google2FA();
+    $google2fa = new Google2FA;
     $otp = $google2fa->getCurrentOtp($secret);
     expect($otp)->not->toBeNull();
 });
 
 test('users can enable 2fa', function () {
     setup2fa();
-    $google2fa = new Google2FA();
+    $google2fa = new Google2FA;
     $otp = $google2fa->getCurrentOtp($this->user->two_factor_secret);
     $response = $this->actingas($this->user)->post(route('2fa.enable.check'), [
         'code' => $otp,
@@ -130,7 +130,7 @@ test('users cannot enable 2fa with invalid otp', function () {
 
 test('users can disable 2fa', function () {
     enable2fa();
-    $google2fa = new Google2FA();
+    $google2fa = new Google2FA;
     $otp = $google2fa->getCurrentOtp($this->user->two_factor_secret);
     $response = $this->actingas($this->user)->post(route('2fa.disable'), [
         'code' => $otp,

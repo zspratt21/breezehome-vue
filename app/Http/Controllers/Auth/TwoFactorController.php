@@ -130,6 +130,7 @@ class TwoFactorController extends Controller
             $user->two_factor_recovery_codes = json_encode($recovery_codes);
             $user->two_factor_enabled = 1;
             $user->save();
+
             return Redirect::route('profile.edit')->with('flash_data', $data);
         }
 
@@ -143,7 +144,7 @@ class TwoFactorController extends Controller
     public function enable(): RedirectResponse
     {
         $user = Auth::user();
-        $google2fa = new Google2FA();
+        $google2fa = new Google2FA;
         $secret_key = $google2fa->generateSecretKey(32);
         $otp_auth_url = $google2fa->getQRCodeUrl(
             config('app.name'),

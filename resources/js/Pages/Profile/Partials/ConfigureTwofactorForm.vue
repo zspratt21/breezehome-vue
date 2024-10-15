@@ -8,6 +8,7 @@ import InputError from '@/Components/InputError.vue';
 import NumberInput from '@/Components/NumberInput.vue';
 import DangerButton from '@/Components/DangerButton.vue';
 import RecoveryCodes from '@/Pages/Auth/RecoveryCodes.vue';
+import SecondaryButton from "@/Components/SecondaryButton.vue";
 
 const props = defineProps<{
     qrCode?: string ;
@@ -102,6 +103,7 @@ watch(() => props.qrCode, (newVal) => {
                             for="code"
                             :value="!mfaEnabled ? 'Scan the above Qr Code with google authenticator then...' : 'To confirm you want to disable 2FA on your account you need to...'"
                         />
+
                         <NumberInput
                             id="code"
                             class="mt-1 block w-full"
@@ -113,11 +115,15 @@ watch(() => props.qrCode, (newVal) => {
                             minlength="6"
                             ref="codeInput"
                         />
+
                         <InputError class="mt-2" :message="form.errors.code" />
                     </div>
                     <div ref="submitContainer" class="mt-4">
-                        <PrimaryButton v-if="!mfaEnabled" type="submit">&#xe2c5; Activate 2FA</PrimaryButton>
-                        <DangerButton v-else type="submit">&#xf071; Confirm</DangerButton>
+                        <PrimaryButton v-if="!mfaEnabled" type="submit" :disabled="form.processing">&#xe2c5; Activate 2FA</PrimaryButton>
+                        <div v-else class="flex gap-2">
+                            <SecondaryButton @click.prevent="showForm = false">Cancel</SecondaryButton>
+                            <DangerButton type="submit" :disabled="form.processing">&#xf071; Confirm</DangerButton>
+                        </div>
                     </div>
                 </div>
             </div>

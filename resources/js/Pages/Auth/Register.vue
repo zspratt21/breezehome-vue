@@ -40,6 +40,7 @@ const submit = () => {
                         required
                         autofocus
                         autocomplete="name"
+                        placeholder="&#xf007;"
                     />
 
                     <InputError class="mt-2" :message="form.errors.name" />
@@ -55,6 +56,7 @@ const submit = () => {
                         v-model="form.email"
                         required
                         autocomplete="username"
+                        placeholder="&#xf0e0;"
                     />
 
                     <InputError class="mt-2" :message="form.errors.email" />
@@ -70,6 +72,7 @@ const submit = () => {
                         v-model="form.password"
                         required
                         autocomplete="new-password"
+                        placeholder="&#xf023;"
                     />
 
                     <InputError class="mt-2" :message="form.errors.password" />
@@ -85,6 +88,7 @@ const submit = () => {
                         v-model="form.password_confirmation"
                         required
                         autocomplete="new-password"
+                        placeholder="&#xf023;"
                     />
 
                     <InputError class="mt-2" :message="form.errors.password_confirmation" />
@@ -99,7 +103,7 @@ const submit = () => {
                     </Link>
 
                     <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                        Register
+                        &#xf328; Register
                     </PrimaryButton>
                 </div>
             </form>

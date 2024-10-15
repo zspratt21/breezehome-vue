@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
 import ImageInput from "@/Components/ImageInput.vue";
 import {computed} from "vue";
+import SaveButton from "@/Components/SaveButton.vue";
 
 defineProps<{
     mustVerifyEmail?: Boolean;
@@ -53,6 +53,7 @@ const submitForm = () => {
                     required
                     autofocus
                     autocomplete="name"
+                    placeholder="&#xf007;"
                 />
 
                 <InputError class="mt-2" :message="form.errors.name" />
@@ -68,6 +69,7 @@ const submitForm = () => {
                     v-model="form.email"
                     required
                     autocomplete="username"
+                    placeholder="&#xf0e0;"
                 />
 
                 <InputError class="mt-2" :message="form.errors.email" />
@@ -113,7 +115,7 @@ const submitForm = () => {
             </div>
 
             <div class="flex items-center gap-4">
-                <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
+                <SaveButton :disabled="form.processing" />
 
                 <Transition
                     enter-active-class="transition ease-in-out"

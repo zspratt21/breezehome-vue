@@ -13,7 +13,6 @@ defineProps<{
 }>();
 
 const refreshResults = (results: User[]) => {
-    console.log('Results:', results);
     userSearchResults.value = results;
 };
 </script>
@@ -32,7 +31,7 @@ const refreshResults = (results: User[]) => {
                     <div class="p-6 text-gray-900 dark:text-gray-100">
                         <p>You're logged in!</p>
                         <div v-if="recoveryCodes">
-                            <p >You just used your last recovery code, so we've generated some more for you.</p>
+                            <p>You just used your last recovery code, so we've generated some more for you.</p>
                             <RecoveryCodes :recoveryCodes="recoveryCodes" />
                         </div>
                     </div>
@@ -45,8 +44,8 @@ const refreshResults = (results: User[]) => {
                             :searchUrl="route('search.users')"
                             :refreshResults="refreshResults"
                         />
-                        <div class="mt-6">
-                            <div v-for="(user, index) in userSearchResults" :key="index">
+                        <div class="mt-6" v-if="userSearchResults.length > 0">
+                            <div  v-for="(user, index) in userSearchResults" :key="index">
                                 {{ user.name }} - {{ user.email }}
                             </div>
                         </div>
