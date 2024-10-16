@@ -56,7 +56,7 @@ const toggleMobileMenu = () => {
                     <FooterLink href="https://github.com/zspratt21">
                         &#xf1f9; {{ new Date().getFullYear() }} Zspratt21
                     </FooterLink>
-                    <FooterLink href="https://github.com/zspratt21/breezehome">Breezehome &#xf015; Starter Template</FooterLink>
+                    <FooterLink href="https://github.com/zspratt21/breezehome-vue">Breezehome &#xf015; Starter Template</FooterLink>
                 </div>
             </div>
         </footer>
